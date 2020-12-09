@@ -1,0 +1,57 @@
+pipeline{
+    agent {
+
+          label 'master' /* 执行节点 */
+
+            }
+    
+    stages {
+        stage('Source') {
+            steps{
+                 
+    script {
+        timeout ("${env.TIMEOUT?:30}"){
+    checkout([$class: 'GitSCM', branches: [[name: '*/master']],extensions: [[$class: 'CheckoutOption', timeout: 30]],,
+    userRemoteConfigs: [[credentialsId: 'c483bdcc-f283-4f8c-b278-7e0a2c49c77d', 
+    url: 'https://github.com/boylegu/SpringBoot-vue.git']]])
+        }
+}
+}
+}
+ stage("Build") {
+            steps{
+                script{
+                    println env.WORKSPACE
+                    dir("${env.WORKSPACE}/frontend"){   //切换到当前工作目录下的frontend目录
+                       sh "pwd"  
+                       sh("npm install")//sh命令可以 sh "command..." 也可以 sh("command....")
+                    }
+                    
+                   
+                }
+            }
+        }
+        
+        
+        
+        
+        stage('Test') {
+            steps{
+                echo 'This is a test step'  
+            }
+        }
+        stage('Deploy') {
+            steps{
+                script{
+                    //dir("${env.WORKSPACE}/target/"){
+                   // sh("java -jar springboot_vue-0.0.1-SNAPSHOT.jar")
+                    //}
+                    dir("${env.WORKSPACE}/frontend"){
+                    sh("npm run dev")
+                    }
+                }
+                  
+            }
+        }
+    }
+}
