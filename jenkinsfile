@@ -10,11 +10,11 @@ pipeline{
             steps{
                  
     script {
-        {
+       
     checkout([$class: 'GitSCM', branches: [[name: '*/master']],extensions: [[$class: 'CheckoutOption', timeout: 30]],
     userRemoteConfigs: [[credentialsId: 'c483bdcc-f283-4f8c-b278-7e0a2c49c77d', 
     url: 'https://github.com/boylegu/SpringBoot-vue.git']]])
-        }
+      
 }
 }
 }
